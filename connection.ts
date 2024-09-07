@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 const connectToDatabase = async () => {
   try {
-   const connecttion = await mongoose.connect("mongodb+srv://codetoanbugx99:LpxcPU939yRBFG68@internship.vonpzuz.mongodb.net/internship?retryWrites=true&w=majority&appName=Internship");
+   const connecttion = await mongoose.connect("mongodb+srv://hoangbinhtdmu:4YmVv8rICfdKPyl5@unread.yij84.mongodb.net/?retryWrites=true&w=majority&appName=Unread");
     if(connecttion) {
       console.log("Connected to database")
     }

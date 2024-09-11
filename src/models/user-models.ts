@@ -1,7 +1,7 @@
-import mongoose, { model, mongo, Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 
-const UserSchema = new Schema({
+const userSchema = new Schema({
     email:{
         type: String,
         required: true,
@@ -16,7 +16,8 @@ const UserSchema = new Schema({
     },
     role:{
         type: String,
-        required: true,
+        enum: ['admin', 'nhân viên kho', 'nhân viên giao hàng'],
+        required: false,
     },
     created_at:{
         type: Date,
@@ -25,11 +26,15 @@ const UserSchema = new Schema({
     updated_at:{
         type: Date,
         default: Date.now,
+    },
+    avatar: {
+        type: String,
+        required: false
     }
 })
 
 
-const UserModel = mongoose.model("User", UserSchema);
+const UserModel = mongoose.model("User", userSchema);
 
 
 export default UserModel;

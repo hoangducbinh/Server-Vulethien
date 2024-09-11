@@ -1,0 +1,132 @@
+openapi: 3.0.3
+info:
+  title: Swagger Petstore
+  version: 1.0.11
+servers:
+  - url: https://petstore3.swagger.io/api/v3
+tags:
+  - name: pet
+  - name: store
+  - name: user
+paths:
+  /pet:
+    put:
+      tags:
+        - pet
+      operationId: updatePet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        '200':
+          description: Successful operation
+    post:
+      tags:
+        - pet
+      operationId: addPet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Pet'
+      responses:
+        '200':
+          description: Successful operation
+  /pet/findByStatus:
+    get:
+      tags:
+        - pet
+      operationId: findPetsByStatus
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            default: available
+      responses:
+        '200':
+          description: successful operation
+  /pet/{petId}:
+    get:
+      tags:
+        - pet
+      operationId: getPetById
+      parameters:
+        - name: petId
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: successful operation
+    delete:
+      tags:
+        - pet
+      operationId: deletePet
+      parameters:
+        - name: petId
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        '400':
+          description: Invalid pet value
+  /store/order:
+    post:
+      tags:
+        - store
+      operationId: placeOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '200':
+          description: successful operation
+  /user:
+    post:
+      tags:
+        - user
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: successful operation
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        status:
+          type: string
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+        petId:
+          type: integer
+        quantity:
+          type: integer
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string

@@ -6,7 +6,9 @@ import CategoryModel from "../models/category-models";
 export const createCategory = async (req: Request, res: Response) => {
     const body = req.body
     const { _id, description, name }: ICategory = body
-
+    if (!name) {
+        return res.status(401).json({ message: 'Tên danh mục không được để trống' })
+    }
     try {
         const category = await CategoryModel.findOne({ name })
         if (category) {
@@ -16,7 +18,7 @@ export const createCategory = async (req: Request, res: Response) => {
             {
                 name,
                 description,
-            })
+            })  
         res.status(201).json({
             message: 'Thêm danh mục thành công',
             data: newCategory
@@ -27,7 +29,7 @@ export const createCategory = async (req: Request, res: Response) => {
     }
 }
 
-export const getAallCategory = async (req: Request, res: Response) => {
+export const getAllCategory = async (req: Request, res: Response) => {
     try {
         const category = await CategoryModel.find()
         res.status(200).json({

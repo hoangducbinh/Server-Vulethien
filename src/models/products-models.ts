@@ -8,6 +8,7 @@ const productSchema = new Schema({
     },
     description:{
         type: String,
+        required: false
     },
     category_id:{
         type: Schema.Types.ObjectId, 
@@ -28,6 +29,11 @@ const productSchema = new Schema({
     },
     reorder_level:{
         type: Number,
+        required: false
+    },
+    unit:{
+        type: String,
+        required: false
     }
 })
 

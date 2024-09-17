@@ -3,6 +3,8 @@ import connectToDatabase from './connection'
 import userRouter from './src/routers/user'
 import cors from 'cors'
 import supplierRouter from './src/routers/supplier'
+import categoryRouter from './src/routers/category'
+import productRouter from './src/routers/product'
 
 
 const express = require('express')
@@ -19,6 +21,8 @@ connectToDatabase()
 
 app.use('/auth', userRouter)
 app.use('/suppiler', supplierRouter)
+app.use('/category', categoryRouter)
+app.use('/product', productRouter)
 
 app.listen(port, () => {
   console.log(`Server is running on port http://localhost:${port}/`)

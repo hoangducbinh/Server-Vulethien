@@ -33,8 +33,9 @@ export interface IProduct {
     unit_price: number,
     import_price: number,
     quantity_in_stock: number,
-    reorder_level: number
-    _id: string
+    reorder_level: number,
+    _id: string,
+    unit: string
 }
 
 export interface ICategory {

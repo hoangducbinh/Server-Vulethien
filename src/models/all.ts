@@ -94,6 +94,10 @@ const productSchema = new Schema({
     },
     reorder_level:{
         type: Number,
+    },
+    unit: {
+        type: String,
+        required: false
     }
 })
 
@@ -427,21 +431,21 @@ const returnSchema = new Schema({
 
 const ReturnModel = mongoose.model('Return', returnSchema);
 
-// export {
-//     UserModel,
-//     WarehouseModel,
-//     StockEntryDetailModel,
-//     StockEntryModel,
-//     StockExitDetailModel,
-//     StockExitModel,
-//     SupplierModel,
-//     ProductModel,
-//     CategoryModel,
-//     PaymentModel,
-//     CustomerModel,
-//     DeliveryModel,
-//     OrderModel,
-//     OrderDetailModel,
-//     InvoiceModel,
-//     ReturnModel
-// }
+export {
+    // UserModel,
+    // WarehouseModel,
+    // StockEntryDetailModel,
+    // StockEntryModel,
+    // StockExitDetailModel,
+    // StockExitModel,
+    // SupplierModel,
+    // ProductModel,
+    // CategoryModel,
+    // PaymentModel,
+    // CustomerModel,
+    // DeliveryModel,
+    // OrderModel,
+    // OrderDetailModel,
+    // InvoiceModel,
+    // ReturnModel
+}

@@ -68,3 +68,11 @@ export interface ICategory {
     name: string,
     description: string
 }
+
+export interface IStockEntryDetail {
+    _id: string,
+    stock_entry_id: string,
+    product_id: string,
+    quantity_received: number,
+    quantity_ordered: number
+}

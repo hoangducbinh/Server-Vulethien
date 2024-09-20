@@ -1,14 +1,13 @@
 import express from 'express'
-import { createSuppiler, deleteSupplier, getAllSuppiler, updateSuppiler } from '../controllers/suppiler-controller'
-import { authenticationMiddleware } from '../middelware'
+import {  createSupplier, deleteSupplier, getAllSupplier, updateSupplier  } from '../controllers/suppiler-controller'
 
 
 const supplierRouter = express.Router()
 
-supplierRouter.post('/create', createSuppiler)
-supplierRouter.get('/getAll', getAllSuppiler)
-supplierRouter.put('/update', updateSuppiler)
-supplierRouter.delete('/delete/:_id',deleteSupplier)
+supplierRouter.post('/create', createSupplier)
+supplierRouter.get('/getAll', getAllSupplier)
+supplierRouter.put('/update', updateSupplier)
+supplierRouter.delete('/delete/:_id', deleteSupplier)
 
 
 export default supplierRouter

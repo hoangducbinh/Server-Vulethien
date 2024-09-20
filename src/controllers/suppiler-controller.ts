@@ -4,7 +4,7 @@ import { ISupplier, } from "../types"
 
 
 
-export const createSuppiler = async (req: Request, res: Response) => {
+export const createSupplier = async (req: Request, res: Response) => {
     const body = req.body
     const { name, contact_info, address }: ISupplier = body
     try {
@@ -30,7 +30,7 @@ export const createSuppiler = async (req: Request, res: Response) => {
     }
 }
 
-export const getAllSuppiler = async (req: Request, res: Response) => {
+export const getAllSupplier = async (req: Request, res: Response) => {
     try {
         const suppliers = await SupplierModel.find()
         res.status(200).json({
@@ -44,7 +44,7 @@ export const getAllSuppiler = async (req: Request, res: Response) => {
 
 }
 
-export const updateSuppiler = async (req: Request, res: Response) => {
+export const updateSupplier = async (req: Request, res: Response) => {
     try {
         const { name, contact_info, address, _id }: ISupplier = req.body
         const editSuppiler = await SupplierModel.findByIdAndUpdate(

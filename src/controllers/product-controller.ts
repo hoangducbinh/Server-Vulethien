@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import ProductModel from "../models/products-models"
+import ProductModel from "../models/product-models"
 import { IProduct } from "../types"
 import CategoryModel from "../models/category-models"
 
@@ -48,7 +48,7 @@ export const getAllProduct = async (req: Request, res: Response) => {
 }
 
 export const updateProduct = async (req: Request, res: Response) => {
-    const { name, category_id, description, import_price, quantity_in_stock, reorder_level, unit_price, _id }: IProduct = req.body
+    const { unit,name, category_id, description, import_price, quantity_in_stock, reorder_level, unit_price, _id }: IProduct = req.body
     try {
         const updateProduct = await ProductModel.findByIdAndUpdate(
             _id,
@@ -59,7 +59,8 @@ export const updateProduct = async (req: Request, res: Response) => {
                 name,
                 quantity_in_stock,
                 reorder_level,
-                unit_price
+                unit_price,
+                unit
             },
             { new: true, runValidators: true }
         )

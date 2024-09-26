@@ -18,7 +18,7 @@ const stockEntryDetailSchema = new Schema({
     },
     quantity_ordered:{
         type: Number,
-        required: true
+        required: false
     },
 })
 

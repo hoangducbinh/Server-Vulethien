@@ -7,7 +7,7 @@ export const createWarehouse = async (req: Request, res: Response) => {
     const {name, location} = req.body
 
     try {
-        const warehouse = await WarehouseModel.findOne(name)
+        const warehouse = await WarehouseModel.findOne({name})
     if(warehouse)
     {
         return res.status(400).json({

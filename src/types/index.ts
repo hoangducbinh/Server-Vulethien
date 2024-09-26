@@ -74,5 +74,16 @@ export interface IStockEntryDetail {
     stock_entry_id: string,
     product_id: string,
     quantity_received: number,
-    quantity_ordered: number
+    quantity_ordered: number,
+    import_price: number,
+}
+
+export interface IPayment {
+    _id: string,
+    stock_entry_id: string,
+    stock_exit_id: string,
+    return_id: string,
+    amount: number,
+    method: string,
+    status: string
 }

@@ -20,11 +20,6 @@ const stockEntrySchema = new Schema({
         type: Number,
         required: true
     },
-    payment: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Payment'
-    }]
-    
 })
 
 const StockEntryModel = mongoose.model('StockEntry', stockEntrySchema)

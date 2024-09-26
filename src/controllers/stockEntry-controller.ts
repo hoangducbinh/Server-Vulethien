@@ -1,19 +1,16 @@
 import { Request, Response } from "express"
-import { IStockEntry, IStockEntryDetail } from "../types"
+import { IPayment, IStockEntry, IStockEntryDetail } from "../types"
 import StockEntryModel from "../models/stockEntry-models"
 import StockEntryDetailModel from "../models/stockEntryDetail-models"
 
 import mongoose from "mongoose"
 import ProductModel from "../models/product-models"
+import PaymentModel from "../models/payment-models"
 
 export const createStockEntry = async (req: Request, res: Response) => {
-    const { supplier_id, warehouse_id, date_received, total_value, payment }: IStockEntry = req.body
+    const { supplier_id, warehouse_id, date_received, total_value}: IStockEntry = req.body
     const stockEntryDetails: IStockEntryDetail[] = req.body.stockEntryDetails
-
-    // Kiểm tra dữ liệu đầu vào
-    if (!supplier_id || !warehouse_id || !date_received || !total_value || !payment || !stockEntryDetails || stockEntryDetails.length === 0) {
-        return res.status(400).json({ message: "Dữ liệu đầu vào không hợp lệ" })
-    }
+    const payment: IPayment = req.body.payment
     const session = await mongoose.startSession()
     session.startTransaction()
 
@@ -23,7 +20,6 @@ export const createStockEntry = async (req: Request, res: Response) => {
             warehouse_id, 
             date_received, 
             total_value, 
-            payment 
         }], { session })
 
         const stockEntryDetailsWithId = stockEntryDetails.map(detail => ({
@@ -37,18 +33,22 @@ export const createStockEntry = async (req: Request, res: Response) => {
         for (const detail of stockEntryDetails) {
             await ProductModel.findByIdAndUpdate(
                 detail.product_id,
-                { $inc: { quantity_in_stock: detail.quantity_received } },
+                { $inc: { quantity_in_stock: detail.quantity_received },
+                  $set: { import_price: detail.import_price }
+             },
                 { session }
             )
         }
-
         await session.commitTransaction()
         session.endSession()
 
+        const fullResponse = {
+            stockEntry: stockEntry[0],
+            stockEntryDetails: createdStockEntryDetails,
+        }
         res.status(201).json({ 
             message: "Đã thêm hàng vào kho và cập nhật số lượng tồn kho thành công", 
-            stockEntry: stockEntry[0],
-            stockEntryDetails: createdStockEntryDetails
+            fullResponse
         })
     } catch (error) {
         await session.abortTransaction()
@@ -192,12 +192,23 @@ export const getAllStockEntries = async (req: Request, res: Response) => {
         const stockEntries = await StockEntryModel.find()
             .populate('supplier_id', 'name') // Giả sử bạn muốn lấy tên nhà cung cấp
             .populate('warehouse_id', 'name') // Giả sử bạn muốn lấy tên kho
+            .populate('payment', 'amount method status')
             .sort({ date_received: -1 }) // Sắp xếp theo ngày nhận, mới nhất lên đầu
-
+        
         res.status(200).json({ 
             message: "Lấy danh sách phiếu nhập kho thành công", 
-            stockEntries 
+            stockEntries
         })
+    } catch (error) {
+        res.status(500).json({ message: "Đã có lỗi xảy ra", error })
+    }
+}
+
+export const getStockEntryDetails = async (req: Request, res: Response) => {
+    const { _id } = req.params
+    try {
+        const stockEntryDetails = await StockEntryDetailModel.find({ stock_entry_id: _id })
+        res.status(200).json({ message: "Lấy chi tiết phiếu nhập kho thành công", stockEntryDetails })
     } catch (error) {
         res.status(500).json({ message: "Đã có lỗi xảy ra", error })
     }

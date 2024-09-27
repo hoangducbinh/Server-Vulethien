@@ -20,6 +20,10 @@ const stockEntryDetailSchema = new Schema({
         type: Number,
         required: false
     },
+    import_price:{
+        type: Number,
+        required: false
+    }
 })
 
 const StockEntryDetailModel = mongoose.model('StockEntryDetail' ,stockEntryDetailSchema)

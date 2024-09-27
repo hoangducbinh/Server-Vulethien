@@ -85,5 +85,8 @@ export interface IPayment {
     return_id: string,
     amount: number,
     method: string,
-    status: string
+    status: string,
+    total_amount: number,
+    last_amount: number,
+    last_method: string
 }

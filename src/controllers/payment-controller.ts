@@ -69,7 +69,7 @@ import StockExitModel from '../models/stockExit-models';
   // Cập nhật một khoản thanh toán
   export const updatePayment = async (req: Request, res: Response) => {
     try {
-      const { amount, method, status, stock_entry_id, stock_exit_id, return_id } = req.body;
+      const { amount, method, status, stock_entry_id, stock_exit_id, return_id, last_amount, last_method, total_amount } = req.body;
 
       const updatedPayment = await PaymentModel.findByIdAndUpdate(
         req.params.id,
@@ -77,6 +77,9 @@ import StockExitModel from '../models/stockExit-models';
           amount,
           method,
           status,
+          last_amount,
+          last_method,
+          total_amount,
           stock_entry_id: stock_entry_id || undefined,
           stock_exit_id: stock_exit_id || undefined,
           return_id: return_id || undefined,

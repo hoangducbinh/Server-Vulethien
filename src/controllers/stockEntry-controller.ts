@@ -10,7 +10,7 @@ import PaymentModel from "../models/payment-models"
 export const createStockEntry = async (req: Request, res: Response) => {
     const { supplier_id, warehouse_id, date_received, total_value}: IStockEntry = req.body
     const stockEntryDetails: IStockEntryDetail[] = req.body.stockEntryDetails
-    const payment: IPayment = req.body.payment
+    const {amount,method,status,total_amount,last_amount}: IPayment = req.body.payment
     const session = await mongoose.startSession()
     session.startTransaction()
 
@@ -20,6 +20,16 @@ export const createStockEntry = async (req: Request, res: Response) => {
             warehouse_id, 
             date_received, 
             total_value, 
+        }], { session })
+        
+        // Tạo thông tin thanh toán
+        const paymentWithStockEntryId = await PaymentModel.create([{ 
+            amount, 
+            method,
+            status,
+            total_amount,
+            last_amount,
+            stock_entry_id: stockEntry[0]._id 
         }], { session })
 
         const stockEntryDetailsWithId = stockEntryDetails.map(detail => ({
@@ -45,6 +55,7 @@ export const createStockEntry = async (req: Request, res: Response) => {
         const fullResponse = {
             stockEntry: stockEntry[0],
             stockEntryDetails: createdStockEntryDetails,
+            payment: paymentWithStockEntryId[0]
         }
         res.status(201).json({ 
             message: "Đã thêm hàng vào kho và cập nhật số lượng tồn kho thành công", 
@@ -187,27 +198,54 @@ export const deleteStockEntry = async (req: Request, res: Response) => {
     }
 }
 
+// export const getAllStockEntries = async (req: Request, res: Response) => {
+//     try {
+//         const stockEntries = await StockEntryModel.find()
+//             .populate('supplier_id', 'name') // Giả sử bạn muốn lấy tên nhà cung cấp
+//             .populate('warehouse_id', 'name') // Giả sử bạn muốn lấy tên kho
+//             .sort({ date_received: -1 }) // Sắp xếp theo ngày nhận, mới nhất lên đầu
+//         res.status(200).json({ 
+//             message: "Lấy danh sách phiếu nhập kho thành công", 
+//             stockEntries
+//         })
+//     } catch (error) {
+//         res.status(500).json({ message: "Đã có lỗi xảy ra", error })
+//     }
+// }
+
+
 export const getAllStockEntries = async (req: Request, res: Response) => {
     try {
         const stockEntries = await StockEntryModel.find()
             .populate('supplier_id', 'name') // Giả sử bạn muốn lấy tên nhà cung cấp
             .populate('warehouse_id', 'name') // Giả sử bạn muốn lấy tên kho
-            .populate('payment', 'amount method status')
             .sort({ date_received: -1 }) // Sắp xếp theo ngày nhận, mới nhất lên đầu
-        
+
+        // Lấy thông tin thanh toán cho mỗi phiếu nhập kho
+        const stockEntriesWithPayment = await Promise.all(stockEntries.map(async (entry) => {
+            const payment = await PaymentModel.findOne({ stock_entry_id: entry._id });
+            return {
+                ...entry.toObject(),
+                payment
+            };
+        }));
+
         res.status(200).json({ 
             message: "Lấy danh sách phiếu nhập kho thành công", 
-            stockEntries
-        })
+            stockEntries: stockEntriesWithPayment
+        });
     } catch (error) {
-        res.status(500).json({ message: "Đã có lỗi xảy ra", error })
+        res.status(500).json({ message: "Đã có lỗi xảy ra", error });
     }
-}
+};
+
+
 
 export const getStockEntryDetails = async (req: Request, res: Response) => {
     const { _id } = req.params
     try {
         const stockEntryDetails = await StockEntryDetailModel.find({ stock_entry_id: _id })
+        .populate('product_id', 'name')
         res.status(200).json({ message: "Lấy chi tiết phiếu nhập kho thành công", stockEntryDetails })
     } catch (error) {
         res.status(500).json({ message: "Đã có lỗi xảy ra", error })

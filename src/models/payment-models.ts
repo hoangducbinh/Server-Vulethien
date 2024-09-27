@@ -4,28 +4,41 @@ import mongoose, { Schema } from "mongoose";
 const paymentSchema = new Schema({
     amount :{
         type: Number,
-        required: true
+        required: true,
     },
     method:{
         type: String,
-        enum: ['Tiền mặt','Chuyển khoản'],
         required: true
     },
     status:{
         type: String,
-        enum: ['Đã thanh toán đủ', 'Còn nợ', 'Đã hoàn tiền']
+        required: true
     },
     date:{
         type: Date,
         default: Date.now
     },
+    total_amount:{
+        type: Number,
+        required: true
+    },
+    last_amount:{
+        type: Number,
+        required: false
+    },
+    last_method:{
+        type: String,
+        required: false
+    },
     stock_entry_id:{
         type: Schema.Types.ObjectId,
-        ref: 'StockEntry'
+        ref: 'StockEntry',
+        required: false
     },
     stock_exit_id:{
         type: Schema.Types.ObjectId,
-        ref: 'StockExit'
+        ref: 'StockExit',
+        required: false
     },
     return_id: {
         type: Schema.Types.ObjectId,

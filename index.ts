@@ -7,6 +7,7 @@ import categoryRouter from './src/routers/category'
 import productRouter from './src/routers/product'
 import warehouseRouter from './src/routers/warehouse'
 import stockEntryRouter from './src/routers/stockEntry'
+import paymentRouter from './src/routers/payment'
 
 
 const express = require('express')
@@ -27,7 +28,7 @@ app.use('/category', categoryRouter)
 app.use('/product', productRouter)
 app.use('/warehouse', warehouseRouter)
 app.use('/stockEntry', stockEntryRouter)
-
+app.use('/payment', paymentRouter)
 app.listen(port, () => {
   console.log(`Server is running on port http://localhost:${port}/`)
 })

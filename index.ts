@@ -8,6 +8,8 @@ import productRouter from './src/routers/product'
 import warehouseRouter from './src/routers/warehouse'
 import stockEntryRouter from './src/routers/stockEntry'
 import paymentRouter from './src/routers/payment'
+import orderRouter from './src/routers/order'
+import customerRouter from './src/routers/customer'
 
 
 const express = require('express')
@@ -17,8 +19,8 @@ const port = 8000
 app.use(express.json())
 app.use(cors())
 
-app.get('/', (req : Request, res: Response) => {
-  res.send('Hello World!') 
+app.get('/', (req: Request, res: Response) => {
+  res.send('Hello World!')
 })
 connectToDatabase()
 
@@ -29,6 +31,8 @@ app.use('/product', productRouter)
 app.use('/warehouse', warehouseRouter)
 app.use('/stockEntry', stockEntryRouter)
 app.use('/payment', paymentRouter)
+app.use('/order', orderRouter)
+app.use('/customer', customerRouter)
 app.listen(port, () => {
   console.log(`Server is running on port http://localhost:${port}/`)
 })

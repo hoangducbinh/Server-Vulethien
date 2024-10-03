@@ -44,7 +44,7 @@ const paymentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Return',
         required: false
-    }
+    },
 })
 
 const PaymentModel = mongoose.model('Payment', paymentSchema)

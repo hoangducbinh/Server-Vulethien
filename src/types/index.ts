@@ -1,4 +1,5 @@
 
+import { Types } from "mongoose"
 
 export interface IUser {
     email: string,
@@ -89,4 +90,26 @@ export interface IPayment {
     total_amount: number,
     last_amount: number,
     last_method: string
+}
+
+export interface IOrder {
+    customer_id: Types.ObjectId
+    date_ordered?: Date
+    status: 'Đang xử lý' | 'Đã giao' | 'Đã hủy'
+    total_value: number
+    payment?: Types.ObjectId
+    orderDetails?: {
+        product_id: Types.ObjectId
+        quantity: number
+        price: number
+    }[]
+}
+
+export interface ICustomer {
+    name: string,
+    phone: string,
+    address: string,
+    avatar: string,
+    email: string,
+    password: string
 }

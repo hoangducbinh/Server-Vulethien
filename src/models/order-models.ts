@@ -12,17 +12,12 @@ const orderSchema = new Schema({
     },
     status: {
         type: String,
-        enum: ['Đang xử lý', 'Đã giao', 'Đã hủy'],
         required: true
     },
     total_value: {
         type: Number,
         required: true
     },
-    payment: {
-        type: Schema.Types.ObjectId,
-        ref: 'Payment'
-    }
 })
 
 const OrderModel = mongoose.model('Order', orderSchema);

@@ -4,7 +4,7 @@ import { IProduct } from "../types"
 import CategoryModel from "../models/category-models"
 
 export const createProduct = async (req: Request, res: Response) => {
-    const { name, category_id, description, import_price, quantity_in_stock, reorder_level, unit_price, unit }: IProduct = req.body
+    const { name, image, category_id, description, import_price, quantity_in_stock, reorder_level, unit_price, unit }: IProduct = req.body
     try {
         const product = await ProductModel.findOne({ name })
         if (product) return res.status(400).json({ message: 'Tên sản phẩm này đã tồn tại' })
@@ -18,6 +18,7 @@ export const createProduct = async (req: Request, res: Response) => {
             quantity_in_stock,
             reorder_level,
             unit_price,
+            image,
             unit
         })
         res.status(201).json({
@@ -48,7 +49,11 @@ export const getAllProduct = async (req: Request, res: Response) => {
 }
 
 export const updateProduct = async (req: Request, res: Response) => {
-    const { unit,name, category_id, description, import_price, quantity_in_stock, reorder_level, unit_price, _id }: IProduct = req.body
+    const { unit,name, image, category_id, description, import_price, quantity_in_stock, reorder_level, unit_price, _id }: IProduct = req.body
+    const existingProduct = await ProductModel.findById(_id).lean();
+    if (!existingProduct) {
+        return res.status(404).json({ message: 'Không tìm thấy sản phẩm' });
+    }
     try {
         const updateProduct = await ProductModel.findByIdAndUpdate(
             _id,
@@ -60,7 +65,8 @@ export const updateProduct = async (req: Request, res: Response) => {
                 quantity_in_stock,
                 reorder_level,
                 unit_price,
-                unit
+                unit,
+                image
             },
             { new: true, runValidators: true }
         )
@@ -68,9 +74,7 @@ export const updateProduct = async (req: Request, res: Response) => {
             message: 'Cập nhật sản phẩm thành công',
             data: updateProduct
         })
-        if (!updateProduct) {
-            return res.status(404).json({ message: 'Không tìm thấy sản phẩm' })
-        }
+        
 
 
     } catch (error: any) {
@@ -98,16 +102,17 @@ export const deleteProduct = async (req: Request, res: Response) => {
 }
 
 export const getProductById = async (req: Request, res: Response) => {
-    const { _id }: IProduct = req.body
+    const { _id } = req.params
     try {
-        const getProduct = await ProductModel.findById(_id)
+        const getProduct = await ProductModel.findOne({ _id: _id })
+        if (!getProduct) {
+            return res.status(404).json({ message: 'Không tìm thấy sản phẩm' })
+        }
         res.status(200).json({
             message: 'Lấy sản phẩm thành công',
             data: getProduct
         })
-        if (!getProduct) {
-            return res.status(404).json({ message: 'Không tìm thấy sản phẩm' })
-        }
+        
     } catch (error: any) {
         console.log('Error', error)
         res.status(500).json({ message: error.message })

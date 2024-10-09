@@ -29,6 +29,7 @@ export interface IStockExitDetail {
 
 export interface IProduct {
     name: string,
+    image: string,
     description: string,
     category_id: string,
     unit_price: number,

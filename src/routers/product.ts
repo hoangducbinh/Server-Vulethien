@@ -7,7 +7,7 @@ productRouter.post('/create', createProduct);
 productRouter.get('/getAll', getAllProduct);
 productRouter.put('/update/:_id', updateProduct);
 productRouter.delete('/delete/:_id', deleteProduct);
-productRouter.get('/get/:id', getProductById);
+productRouter.get('/get/:_id', getProductById);
 productRouter.get('/getbyCategory/:_id', getProductsByCategory);
 
 export default productRouter;

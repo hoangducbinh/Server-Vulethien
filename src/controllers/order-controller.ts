@@ -84,7 +84,7 @@ export const getOrderById = async (req: Request, res: Response) => {
     const { id } = req.params
     try {
         const order = await OrderModel.findById(id)
-            .populate('customer_id', 'name email')
+            .populate('customer_id', 'name email address')
             .lean() // Use lean() for better performance
 
         if (!order) {
@@ -93,7 +93,7 @@ export const getOrderById = async (req: Request, res: Response) => {
 
         // Fetch order details
         const orderDetails = await OrderDetailModel.find({ order_id: id })
-            .populate('product_id', 'name unit_price')
+            .populate('product_id', 'name unit_price image')
             .lean()
 
         // Combine order and order details

@@ -21,6 +21,7 @@ const stockExitDetailSchema = new Schema({
         type: Number,
         required: true
     },
+    
 })
 
 

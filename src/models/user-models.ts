@@ -16,7 +16,6 @@ const userSchema = new Schema({
     },
     role:{
         type: String,
-        enum: ['admin', 'nhân viên kho', 'nhân viên giao hàng'],
         required: false,
     },
     created_at:{
@@ -29,6 +28,38 @@ const userSchema = new Schema({
     },
     avatar: {
         type: String,
+        required: false
+    },
+    phone: {
+        type: String,
+        required: false
+    },
+    department: {
+        type: String,
+        required: false
+    },
+    address: {
+        type: String,
+        required: false
+    },
+    cccd: {
+        type: String,
+        required: false
+    },
+    gender: {
+        type: String,
+        required: false
+    },
+    hometown: {
+        type: String,
+        required: false
+    },
+    position: {
+        type: String,
+        required: false
+    },
+    birthday: {
+        type: Date,
         required: false
     }
 })

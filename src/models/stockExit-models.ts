@@ -19,15 +19,7 @@ const stockExitSchema = new Schema({
     total_value:{
         type: Number,
         required: true
-    },
-    payment: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Payment'
-    }],
-    returns: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Return'
-    }]
+    }
 })
 
 const StockExitModel = mongoose.model('StockExit', stockExitSchema)

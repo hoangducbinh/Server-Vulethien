@@ -10,7 +10,7 @@ import stockEntryRouter from './src/routers/stockEntry'
 import paymentRouter from './src/routers/payment'
 import orderRouter from './src/routers/order'
 import customerRouter from './src/routers/customer'
-
+import stockExitRouter from './src/routers/stockExit'
 
 const express = require('express')
 const app = express()
@@ -33,6 +33,7 @@ app.use('/stockEntry', stockEntryRouter)
 app.use('/payment', paymentRouter)
 app.use('/order', orderRouter)
 app.use('/customer', customerRouter)
+app.use('/stockExit', stockExitRouter)
 app.listen(port, () => {
   console.log(`Server is running on port http://localhost:${port}/`)
 })

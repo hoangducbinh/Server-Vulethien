@@ -20,7 +20,21 @@ const register = async (req: any, res: any) => {
 
         body.password = hashpassword;
 
-        const newUser = new UserModel(body);
+        const newUser = await UserModel.create({
+            name,
+            email,
+            password: hashpassword,
+            role: "",
+            phone: "",
+            department: "",
+            address: "",
+            cccd: "",
+            gender: "",
+            hometown: "",
+            position: "",
+            avatar: "",
+        }
+        );
         await newUser.save();
 
         // Loại bỏ mật khẩu trước khi trả về thông tin người dùng
@@ -29,7 +43,7 @@ const register = async (req: any, res: any) => {
 
 
         res.status(201).json({
-            message: 'Register thành công',
+            message: 'Tạo tài khoản thành công',
             user: userResponse
         });
 
@@ -76,4 +90,76 @@ const login = async (req: any, res: any) => {
     }
 };
 
-export { register, login };
+const getUser = async (req: any, res: any) => {
+    try {
+        const users = await UserModel.find();
+        res.status(200).json({ users });
+    } catch (error: any) {
+        console.log("Error: ", error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const getUserById = async (req: any, res: any) => {
+    const { id } = req.params;
+    try {
+        const user = await UserModel.findById(id);
+        if (!user) {
+            return res.status(404).json({ message: "Không tìm thấy người dùng" });
+        }
+        res.status(200).json({ user });
+    } catch (error: any) {
+        console.log("Error: ", error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+const updateUser = async (req: any, res: any) => {
+    const { id } = req.params;
+    const { name, email, birthday, password, role, phone, department, address, cccd, gender, hometown, position, avatar } = req.body;
+
+    try {
+        const updatedUser = await UserModel.findByIdAndUpdate(id, {
+            name, email, birthday, password, role, phone, department, address, cccd, gender, hometown, position, avatar
+        }, { new: true });
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "Không tìm thấy người dùng" });
+        }
+
+        res.status(200).json({
+            message: 'Cập nhật thông tin người dùng thành công',
+            user: updatedUser
+        });
+
+    } catch (error: any) {
+        console.log("Error: ", error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const deleteUser = async (req: any, res: any) => {
+    const { id } = req.params;
+
+    try {
+        const deletedUser = await UserModel.findByIdAndDelete(id);
+
+        if (!deletedUser) {
+            return res.status(404).json({ message: "Không tìm thấy người dùng" });
+        }
+
+        res.status(200).json({
+            message: 'Xóa người dùng thành công',
+            user: deletedUser
+        });
+
+    } catch (error: any) {
+        console.log("Error: ", error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+
+export { register, login, getUser, getUserById, updateUser, deleteUser };

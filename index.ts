@@ -17,7 +17,12 @@ const app = express()
 const port = 8000
 
 app.use(express.json())
-app.use(cors({ origin: 'https://vulethien.vercel.app' }))
+app.use(cors({ 
+  origin: 'https://vulethien.vercel.app',
+  credentials: true,
+  methods: 'GET,POST,PUT,DELETE',
+  
+}))
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!')

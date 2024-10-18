@@ -10,7 +10,7 @@ const stockExitSchema = new Schema({
     warehouse_id:{
         type: Schema.Types.ObjectId,
         ref: 'Warehouse',
-        required: true
+        required: false
     },
     date:{
         type: Date,

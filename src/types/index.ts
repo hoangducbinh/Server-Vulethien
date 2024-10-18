@@ -114,3 +114,12 @@ export interface ICustomer {
     email: string,
     password: string
 }
+
+export interface IOrderDetail {
+    _id: string,
+    order_id: string,
+    product_id: string,
+    quantity: number,
+    price: number,
+    status: boolean
+}

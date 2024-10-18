@@ -2,6 +2,8 @@ import { Request, Response } from "express"
 import OrderModel from "../models/order-models"
 import OrderDetailModel from "../models/orderDetail-models"
 import { IOrder } from "../types"
+import StockExitModel from "../models/stockExit-models"
+import StockExitDetailModel from "../models/stockExitDetail-models"
 
 
 // Create a new order
@@ -194,4 +196,101 @@ export const getOrderDetails = async (req: Request, res: Response) => {
         res.status(500).json({ message: error.message })
     }
 }
+
+export const updateProductPreparedStatus = async (req: Request, res: Response) => {
+    const { orderId, productId, prepared } = req.body;
+    try {
+        const orderDetail = await OrderDetailModel.findOne({ order_id: orderId, product_id: productId });
+        if (!orderDetail) {
+            return res.status(404).json({ message: "Không tìm thấy chi tiết sản phẩm" });
+        }
+
+        // Update the prepared status of the product
+        orderDetail.prepared = prepared;
+        await orderDetail.save();
+
+        res.status(200).json({ message: "Cập nhật trạng thái sản phẩm thành công" });
+    } catch (error: any) {
+        console.log('Error', error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// export const updateOrderStatus = async (req: Request, res: Response) => {
+//     const { orderId, status } = req.body;
+//     try {
+//         const updatedOrder = await OrderModel.findByIdAndUpdate(
+//             orderId,
+//             { status },
+//             { new: true, runValidators: true }
+//         ).populate('customer_id', 'name');
+
+//         if (!updatedOrder) {
+//             return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
+//         }
+
+//         res.status(200).json({
+//             message: "Cập nhật trạng thái đơn hàng thành công",
+//             data: updatedOrder
+//         });
+//     } catch (error: any) {
+//         console.log('Error', error);
+//         res.status(500).json({ message: error.message });
+//     }
+// };
+
+
+export const updateOrderStatus = async (req: Request, res: Response) => {
+    const { orderId, status } = req.body;
+    try {
+        const updatedOrder = await OrderModel.findByIdAndUpdate(
+            orderId,
+            { status },
+            { new: true, runValidators: true }
+        ).populate('customer_id', 'name');
+
+        if (!updatedOrder) {
+            return res.status(404).json({ message: "Không tìm thấy đơn hàng" });
+        }
+
+        // If the new status is "exported", create stockExit and stockExitDetail
+        if (status === "exported") {
+            // Fetch order details
+            const orderDetails = await OrderDetailModel.find({ order_id: orderId }).populate('product_id');
+
+            // Create stock exit
+            const newStockExit = await StockExitModel.create({
+                customer_id: updatedOrder.customer_id,
+                date: new Date(),
+                total_value: updatedOrder.total_value
+            });
+
+            // Create stock exit details
+            const stockExitDetails = orderDetails.map(detail => ({
+                stock_exit_id: newStockExit._id,
+                product_id: detail.product_id._id,
+                quantity_ordered: detail.quantity,
+                quantity_received: detail.quantity, // Assuming all ordered items are received
+            }));
+
+            await StockExitDetailModel.insertMany(stockExitDetails);
+
+            res.status(200).json({
+                message: "Cập nhật trạng thái đơn hàng thành công",
+                data: {
+                    order: updatedOrder,
+                    stock_exit: newStockExit
+                }
+            });
+        } else {
+            res.status(200).json({
+                message: "Cập nhật trạng thái đơn hàng thành công",
+                data: updatedOrder
+            });
+        }
+    } catch (error: any) {
+        console.log('Error', error);
+        res.status(500).json({ message: error.message });
+    }
+};
 

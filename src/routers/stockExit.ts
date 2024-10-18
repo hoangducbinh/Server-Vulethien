@@ -1,9 +1,10 @@
-import { createStockExit, getStockExitById, getStockExits, } from "../controllers/stockExit-controller";
+import { createStockExit, getStockExitById, getStockExitDetail, getStockExits, } from "../controllers/stockExit-controller";
 import express from 'express';
 const stockExitRouter = express.Router();
 
-stockExitRouter.post('/stock-exit', createStockExit)
-stockExitRouter.get('/stock-exit', getStockExits)
-stockExitRouter.get('/stock-exit/:id', getStockExitById)
+stockExitRouter.post('/create', createStockExit)
+stockExitRouter.get('/getAll', getStockExits)
+stockExitRouter.get('/getById/:id', getStockExitById)
+stockExitRouter.get('/getDetailById/:id', getStockExitDetail)
 
 export default stockExitRouter; 

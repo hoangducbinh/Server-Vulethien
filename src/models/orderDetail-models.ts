@@ -18,6 +18,10 @@ const orderDetailSchema = new Schema({
     price: {
         type: Number,
         required: true
+    },
+    prepared: {
+        type: Boolean,
+        default: false
     }
 })
 

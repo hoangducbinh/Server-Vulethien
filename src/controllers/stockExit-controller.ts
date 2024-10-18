@@ -71,7 +71,6 @@ export const getStockExits = async (req: Request, res: Response) => {
         const stockExits = await StockExitModel.find()
             .populate('customer_id', 'name')
             .populate('warehouse_id', 'name');
-
         res.status(200).json({
             message: "Lấy danh sách xuất kho thành công",
             data: stockExits
@@ -109,3 +108,22 @@ export const getStockExitById = async (req: Request, res: Response) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+
+export const getStockExitDetail = async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    try {
+        const stockExitDetail = await StockExitDetailModel.findById(id)
+            .populate('product_id', 'name unit_price image');
+
+        res.status(200).json({
+            message: "Lấy thông tin chi tiết xuất kho thành công",
+            data: stockExitDetail
+        });
+    }
+    catch (error: any) {
+        console.log('Error', error);
+        res.status(500).json({ message: error.message });
+    }
+}
